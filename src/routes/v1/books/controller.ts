@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import NotFoundError from "../../../errors/NotFoundError";
+import { getParamsData } from "src/utils";
+//import { bookRepository } from "src/data/repository/books_repository";
 
 export const listBooks = (req: Request, res: Response) => {
   res.json({ message: "List of books" });
@@ -6,13 +9,9 @@ export const listBooks = (req: Request, res: Response) => {
 
 export const getBook = async (
   req: Request, 
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
-  try {
+  throw new NotFoundError("Book not found");
 
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
   res.json({ message: "Get book by ID" });
 }
