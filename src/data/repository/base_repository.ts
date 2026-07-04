@@ -4,9 +4,22 @@ import { query, queryOne } from "src/database";
 export interface Repository<T> {
   findAll: () => Promise<T[]>;
   findById: (id: number) => Promise<T | null>;
+  findPaginated: (params: PaginationParams) => Promise<PaginatedResult<T>>;
   create: (data: Record<string, unknown>) => Promise<T>;
   update: (id: number, data: Record<string, unknown>) => Promise<T | null>;
   delete: (id: number) => Promise<boolean>;
+}
+
+export interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export function createBaseRepository<T extends QueryResultRow>(
@@ -19,6 +32,26 @@ export function createBaseRepository<T extends QueryResultRow>(
  
     async findById(id: number) {
       return queryOne<T>(`SELECT * FROM ${tableName} WHERE id = $1`, [id]);
+    },
+
+    async findPaginated(params: PaginationParams = {}) {
+      const limit = params.limit ?? 20;
+      const offset = params.offset ?? 0;
+ 
+      const [data, countRows] = await Promise.all([
+        query<T>(`SELECT * FROM ${tableName} ORDER BY id LIMIT $1 OFFSET $2`, [
+          limit,
+          offset,
+        ]),
+        query<{ count: number }>(`SELECT COUNT(*)::int AS count FROM ${tableName}`),
+      ]);
+ 
+      return {
+        data,
+        total: countRows[0].count,
+        limit,
+        offset,
+      };
     },
  
     async create(data: Record<string, unknown>) {

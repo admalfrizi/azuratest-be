@@ -8,6 +8,7 @@ FROM base AS development
 RUN npm install
 COPY . .
 EXPOSE 3000
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 CMD ["npm", "run", "dev"]
 
 # ---- Build ----
@@ -20,7 +21,10 @@ RUN npm run build
 FROM base AS production
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
+COPY migrations ./migrations
+COPY entrypoint.sh ./entrypoint.sh
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 EXPOSE 3000
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 CMD ["node", "dist/server.js"]

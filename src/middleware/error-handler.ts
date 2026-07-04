@@ -16,11 +16,11 @@ export default function errorHandler(
   }
 
   if (error instanceof CaseError) {
-    sendErrorResponse(
+    next(sendErrorResponse(
       res, 
-      getErrorMessage(error), 
+      error.message, 
       error.statusCode as number
-    );
+    ));
     return;
   }
 

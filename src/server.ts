@@ -5,8 +5,11 @@ import config from "./config";
 import v1 from "./routes/v1";
 import errorHandler from "./middleware/error-handler";
 
+const apiPath = "/api";
+
 export const createServer = () => {
   const app = express();
+
   app
     .disable("x-powered-by")
     .use(morgan("dev"))
@@ -14,11 +17,12 @@ export const createServer = () => {
     .use(express.json())
     .use(cors());
 
-  app.get("/health", (req: Request, res: Response) => {
+  app.get(`${apiPath}/health`, (req: Request, res: Response) => {
     res.json({ ok: true, environment: config.env });
   });
 
-  app.use("/v1", v1);
+  app.use(`${apiPath}/v1`, v1);
+
   app.use(errorHandler);
 
   return app;
