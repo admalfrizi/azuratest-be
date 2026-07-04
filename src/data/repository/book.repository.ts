@@ -1,4 +1,4 @@
-import { query } from "src/database";
+import { query } from "../../../src/database";
 import { createBaseRepository } from "./base_repository";
 
 export interface Book {

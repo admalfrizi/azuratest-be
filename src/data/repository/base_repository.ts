@@ -1,5 +1,5 @@
 import { QueryResultRow } from "pg";
-import { query, queryOne } from "src/database";
+import { query, queryOne } from "../../../src/database";
 
 export interface Repository<T> {
   findAll: () => Promise<T[]>;

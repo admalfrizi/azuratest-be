@@ -1,12 +1,20 @@
 import { Request, Response, NextFunction } from "express";
-import NotFoundError from "../../../errors/NotFoundError";
-import { getParamsData } from "src/utils";
-//import { bookRepository } from "src/data/repository/books_repository";
+import { getParamsData } from "../../../utils";
+import { sendSuccessResponse } from "../../../middleware/response-handler";
+import { bookRepository } from "../../../data/repository/book.repository";
 
-export const listBooks = (req: Request, res: Response) => {
+export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
   
-  res.json({ message: "List of books" });
+  const result = await bookRepository.findPaginated({ limit, offset });
+  
+  sendSuccessResponse(res, result.data, 200,
+    { page, 
+      perPage, 
+      total_pages: Math.ceil(result.total / perPage),
+      total_count: result.total, 
+    }
+  );
 }
 
 export const getBook = async (

@@ -3,7 +3,8 @@ import { Response } from "express";
 export interface ApiSuccessResponse<T>{
     success: boolean;
     code: number;
-    data: T
+    data: T,
+    meta?: Record<string, unknown>
 }
 
 export interface ApiErrorResponse {
@@ -12,12 +13,14 @@ export interface ApiErrorResponse {
     message: string;
 }
 
-export function sendSuccessResponse<T>(res: any, data: T, code: number = 200): Response { 
+export function sendSuccessResponse<T>(res: any, data: T, code: number = 200, meta?: Record<string, unknown>): Response { 
     const body: ApiSuccessResponse<T> = {
         success: true,
         code,
-        data
+        data,
+        meta
     };
+    if (meta) body.meta = meta;
     return res.status(code).json(body);
 }
 

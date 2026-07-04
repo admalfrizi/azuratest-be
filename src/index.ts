@@ -1,5 +1,5 @@
 import config from "./config";
-import { checkDbConnection, closeDbConnection } from "./database";
+import { checkDbConnection, closeDbConnection } from "../src/database";
 import { createServer } from "./server";
 
 const server = createServer();
