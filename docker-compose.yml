@@ -19,8 +19,8 @@ services:
       - app-network
 
   db:
-    image: postgres:17-alpine
-    container_name: myapp_postgres
+    image: postgres:latest
+    container_name: db_azuratest
     ports:
       - "5432:5432"
     environment:
