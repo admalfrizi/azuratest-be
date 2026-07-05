@@ -4,6 +4,7 @@ import cors from "cors";
 import config from "./config";
 import v1 from "./routes/v1";
 import errorHandler from "./middleware/error-handler";
+import { notFoundHandler } from "./middleware/notfound-handler";
 
 const apiPath = "/api";
 
@@ -23,6 +24,7 @@ export const createServer = () => {
 
   app.use(`${apiPath}/v1`, v1);
 
+  app.use(notFoundHandler);
   app.use(errorHandler);
 
   return app;

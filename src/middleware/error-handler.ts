@@ -16,21 +16,21 @@ export default function errorHandler(
     return;
   }
 
-  if (error instanceof CaseError) {
-    sendErrorResponse(
-      res, 
-      error.message, 
-      error.statusCode as number
-    );
-    return;
-  }
-
   if(error instanceof ValidationError) {
     sendErrorResponse(
       res, 
       error.message, 
       error.statusCode as number,
       error.details
+    );
+    return;
+  }
+
+  if (error instanceof CaseError) {
+    sendErrorResponse(
+      res, 
+      error.message, 
+      error.statusCode as number
     );
     return;
   }
