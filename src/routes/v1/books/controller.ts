@@ -28,21 +28,21 @@ export const getBook = async (
   res: Response
 ) => {
 
-  res.json({ message: "Get book by ID" });
+  const bookData = await bookRepository.findById(Number(req.params.id));
+  if (!bookData) {
+    return sendErrorResponse(res, "Book not found", 404);
+  }
+
+  sendSuccessResponse(res, bookData, 200, "Successfully retrieved book");
 }
 
 export const createBook = async (
   req: Request, 
   res: Response
 ) => {
-  const validation = validateCreateBook(req.body);
-  
-  if (!validation.isValid) {
-    return sendErrorResponse(res, validation.errors.join(", "), 400);
-  }
-
-  const { title, author, category_id, publisher, publication_date, number_of_pages } = validation.data;
+  const { title, author, category_id, publisher, publication_date, number_of_pages } = validateCreateBook(req.body);
   const category = await categoriesRepository.findById(category_id);
+
   if (!category) {
     return sendErrorResponse(res, "category_id does not exist", 400);
   }

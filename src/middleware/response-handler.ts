@@ -12,6 +12,7 @@ export interface ApiErrorResponse {
     success: boolean;
     code: number;
     message: string;
+    details?: unknown;
 }
 
 export function sendSuccessResponse<T>(
@@ -32,11 +33,17 @@ export function sendSuccessResponse<T>(
     return res.status(code).json(body);
 }
 
-export function sendErrorResponse(res: any, message: string, code: number = 500): Response {
+export function sendErrorResponse(
+    res: any, 
+    message: string, 
+    code: number = 500, 
+    details?: unknown
+): Response {
     const body: ApiErrorResponse = {
         success: false,
         code,
-        message
+        message,
+        details
     };
     return res.status(code).json(body);
 }

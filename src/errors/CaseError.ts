@@ -1,13 +1,13 @@
 class CaseError extends Error {
-    public readonly code: string;
     public readonly message: string;
     public readonly statusCode: number;
+    public readonly details?: unknown;
 
-    constructor(code: string, message: string, statusCode: number) {
+    constructor(message: string, statusCode: number, details?: unknown) {
         super();
-        this.code = code;
         this.message = message;
         this.statusCode = statusCode;
+        this.details = details;
     }
 }
 

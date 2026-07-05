@@ -3,6 +3,7 @@ import config from "../config";
 import { getErrorMessage } from "../utils";
 import { sendErrorResponse } from "./response-handler";
 import CaseError from "../errors/CaseError";
+import ValidationError from "../errors/ValidationError";
 
 export default function errorHandler(
   error: unknown,
@@ -16,11 +17,21 @@ export default function errorHandler(
   }
 
   if (error instanceof CaseError) {
-    next(sendErrorResponse(
+    sendErrorResponse(
       res, 
       error.message, 
       error.statusCode as number
-    ));
+    );
+    return;
+  }
+
+  if(error instanceof ValidationError) {
+    sendErrorResponse(
+      res, 
+      error.message, 
+      error.statusCode as number,
+      error.details
+    );
     return;
   }
 
