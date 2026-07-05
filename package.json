@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon",
+    "migrate:create": "node-pg-migrate create",
+    "migrate:up": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,6 +19,7 @@
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^26.1.0",
+    "@types/pg": "^8.20.0",
     "dotenv-cli": "^11.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
@@ -23,6 +28,8 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "morgan": "^1.11.0",
-    "nodemon": "^3.1.14"
+    "node-pg-migrate": "^8.0.4",
+    "nodemon": "^3.1.14",
+    "pg": "^8.22.0"
   }
 }
