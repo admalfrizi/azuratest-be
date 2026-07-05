@@ -31,3 +31,19 @@ export function getParamsData(req: Request) {
     offset,
   };
 }
+
+export function excludeFields<T extends Record<string, any>, K extends keyof T>(
+  obj: T,
+  keysToExclude: K[]
+): Omit<T, K> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keysToExclude.includes(key as K))
+  ) as Omit<T, K>;
+}
+
+export function excludeFieldsFromArray<T extends Record<string, any>, K extends keyof T>(
+  arr: T[],
+  keysToExclude: K[]
+): Omit<T, K>[] {
+  return arr.map(item => excludeFields(item, keysToExclude));
+}

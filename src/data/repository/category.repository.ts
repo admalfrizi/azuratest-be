@@ -5,6 +5,7 @@ export interface Categories {
   id: number;
   name: string;
   created_at: Date;
+  updated_at: Date;
 }
 
 export function createCategoriesRepository() {
