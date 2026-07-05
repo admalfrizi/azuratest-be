@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { getParamsData } from "../../../utils";
 import { sendErrorResponse, sendSuccessResponse } from "../../../middleware/response-handler";
 import { bookRepository } from "../../../data/repository/book.repository";
-import { validateCreateBook } from "src/validators/book.validator";
+import { validateCreateBook } from "../../../../src/validators/book.validator";
+import { categoriesRepository } from "src/data/repository/category.repository";
 
 export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
@@ -37,7 +38,20 @@ export const createBook = async (
   }
 
   const { title, author, category_id, publisher, publication_date, number_of_pages } = validation.data;
+  const category = await categoriesRepository.findById(category_id);
+  if (!category) {
+    return sendErrorResponse(res, "category_id does not exist", 400);
+  }
 
+  const book = await bookRepository.create({
+    title,
+    author,
+    category_id,
+    publisher,
+    publication_date,
+    number_of_pages
+  });
   
+  sendSuccessResponse(res, book, 201);
 
 }
