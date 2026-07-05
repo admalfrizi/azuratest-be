@@ -8,7 +8,11 @@ export const listCategories = async (req: Request, res: Response) => {
     
     const result = await categoriesRepository.findPaginated({ limit, offset });
 
-    sendSuccessResponse(res, result.data, 200,
+    sendSuccessResponse(
+        res, 
+        result.data, 
+        200,
+        "Successfully retrieved categories",
         {   page, 
             perPage, 
             total_pages: Math.ceil(result.total / perPage),

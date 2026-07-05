@@ -3,14 +3,18 @@ import { getParamsData } from "../../../utils";
 import { sendErrorResponse, sendSuccessResponse } from "../../../middleware/response-handler";
 import { bookRepository } from "../../../data/repository/book.repository";
 import { validateCreateBook } from "../../../../src/validators/book.validator";
-import { categoriesRepository } from "src/data/repository/category.repository";
+import { categoriesRepository } from "../../../../src/data/repository/category.repository";
 
 export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
   
   const result = await bookRepository.findPaginated({ limit, offset });
   
-  sendSuccessResponse(res, result.data, 200,
+  sendSuccessResponse(
+    res, 
+    result.data, 
+    200, 
+    "Successfully retrieved books",
     { page, 
       perPage, 
       total_pages: Math.ceil(result.total / perPage),
@@ -51,7 +55,7 @@ export const createBook = async (
     publication_date,
     number_of_pages
   });
-  
-  sendSuccessResponse(res, book, 201);
+
+  sendSuccessResponse(res, book, 201, "Book created successfully");
 
 }
