@@ -1,16 +1,6 @@
 import { query } from "../../../src/database";
+import { Book } from "../entities/Book";
 import { createBaseRepository } from "./base_repository";
-
-export interface Book {
-  id: number;
-  title: string;
-  author: string;
-  publisher: string;
-  publication_date: string;
-  number_of_pages: number;
-  category_id: number;
-  created_at: Date;
-}
 
 export function createBookRepository() {
     const base = createBaseRepository<Book>("books");

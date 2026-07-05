@@ -4,6 +4,7 @@ import { sendErrorResponse, sendSuccessResponse } from "../../../middleware/resp
 import { bookRepository } from "../../../data/repository/book.repository";
 import { validateCreateBook } from "../../../../src/validators/book.validator";
 import { categoriesRepository } from "../../../../src/data/repository/category.repository";
+import NotFoundError from "../../../errors/NotFoundError";
 
 export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
@@ -30,7 +31,7 @@ export const getBook = async (
 
   const bookData = await bookRepository.findById(Number(req.params.id));
   if (!bookData) {
-    return sendErrorResponse(res, "Book not found", 404);
+    throw new NotFoundError("Book not found");
   }
 
   sendSuccessResponse(res, bookData, 200, "Successfully retrieved book");
@@ -58,4 +59,18 @@ export const createBook = async (
 
   sendSuccessResponse(res, book, 201, "Book created successfully");
 
+}
+
+export const updateBook = async (
+  req: Request, 
+  res: Response
+) => {
+
+}
+
+export const deleteBook = async (
+  req: Request, 
+  res: Response
+) => {
+  
 }

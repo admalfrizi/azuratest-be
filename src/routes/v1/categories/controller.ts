@@ -31,3 +31,17 @@ export const createCategory = async (req: Request, res: Response) => {
 
     sendSuccessResponse(res, category, 201, "Category created successfully");
 }
+
+export const updateCategory = async (
+  req: Request, 
+  res: Response
+) => {
+  
+}
+
+export const deleteCategory = async (
+  req: Request, 
+  res: Response
+) => {
+  
+}
