@@ -37,51 +37,66 @@ npm or yarn
 Docker & Docker Compose
 
 ## 🚀 Setup & Configuration Tutorial
-Option 1: Running via Docker (Recommended)
+### Option 1: Running via Docker (Recommended)
 Because this project comes with a docker-compose.yml and a Dockerfile, running it via Docker is the easiest way to ensure consistency across environments.
 
-Clone the repository:
+#### 1. Clone the repository:
 
-Bash
+``` bash
 git clone [https://github.com/admalfrizi/azuratest-be.git](https://github.com/admalfrizi/azuratest-be.git)
 cd azuratest-be
-Configure Environment Variables:
+```
+
+#### 2. Configure Environment Variables:
+
 Create a .env file in the root directory. You will likely need database credentials and port configurations. (Check docker-compose.yml for required environment variables).
 
-Bash
+```Bash
 touch .env
 # Add your environment variables inside .env
-Build and spin up the containers:
+```
 
-Bash
+#### 3. Build and spin up the containers:
+
+``` Bash
 docker-compose up --build
+```
 Note: The entrypoint.sh script will automatically run upon startup, which may handle database migrations or seed logic before starting the server.
 
-Stopping the containers:
+#### 4. Stopping the containers:
 
-Bash
+``` Bash
 docker-compose down
-Option 2: Running Locally (Without Docker)
+```
+
+### Option 2: Running Locally (Without Docker)
 If you prefer developing without Docker, you can run the app directly on your host machine.
 
-Install dependencies:
+#### 1. Install dependencies:
 
-Bash
+``` Bash
 npm install
-Run database migrations:
+```
+#### 2. Run database migrations:
 Depending on the ORM or query builder used in the migrations folder (e.g., Prisma, TypeORM, Knex), run the appropriate migration command. For example:
 
-Bash
+``` Bash
 npm run migrate
-Start the development server:
+```
+
+#### 3. Start the development server:
 The project is configured with nodemon.json for hot-reloading. You can start the app in development mode by running:
 
-Bash
+```Bash
 npm run dev
-Alternatively, to build and run for production:
+```
 
-Bash
+#### 4. Alternatively, to build and run for production:
+
+```Bash
 npm run build
 npm start
+```
+
 🗄 Migrations
 Database schema changes are tracked in the migrations/ folder. Whenever you pull new changes, ensure your local database is up-to-date. If running via Docker, entrypoint.sh is typically configured to run these migrations automatically. If running locally, consult the package.json scripts for the exact migration execution command.
