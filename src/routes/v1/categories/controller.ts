@@ -2,6 +2,7 @@ import { excludeFieldsFromArray, getParamsData } from "../../../utils";
 import { sendSuccessResponse } from "../../../middleware/response-handler";
 import { categoriesRepository } from "../../../data/repository/category.repository";
 import { Request, Response } from "express";
+import NotFoundError from "../../../errors/NotFoundError";
 
 export const listCategories = async (req: Request, res: Response) => {
     const { page, perPage, limit, offset } = getParamsData(req);
@@ -36,12 +37,37 @@ export const updateCategory = async (
   req: Request, 
   res: Response
 ) => {
-  
+    const id = Number(req.params.id)
+    const { name } = req.body;
+    
+    const category = await categoriesRepository.findById(id);
+
+    if(!category) {
+        throw new NotFoundError("Category not found or exist");
+    }
+
+    const updateData = await categoriesRepository.update(id, { name });
+
+    sendSuccessResponse(res,updateData, 201, "Category succesfully updated");
 }
 
 export const deleteCategory = async (
   req: Request, 
   res: Response
 ) => {
-  
+  const id = Number(req.params.id)
+
+  const deleted = await categoriesRepository.delete(id);
+
+  if(!deleted)
+  {
+    throw new NotFoundError("Category not found")
+  }
+    
+  sendSuccessResponse(
+    res,
+    "",
+    204,
+    "Book delete successfully"
+  )
 }
