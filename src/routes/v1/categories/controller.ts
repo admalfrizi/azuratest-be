@@ -3,7 +3,7 @@ import { sendSuccessResponse } from "../../../middleware/response-handler";
 import { categoriesRepository } from "../../../data/repository/category.repository";
 import { Request, Response } from "express";
 import NotFoundError from "../../../errors/NotFoundError";
-import { validateCreateCategory } from "src/validators/category.validator";
+import { validateCreateCategory } from "../../../validators/category.validator";
 
 export const listCategories = async (req: Request, res: Response) => {
     const { page, perPage, limit, offset } = getParamsData(req);

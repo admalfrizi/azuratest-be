@@ -3,8 +3,8 @@ import { query, queryOne } from "../../../src/database";
 
 export interface Repository<T> {
   findAll: () => Promise<T[]>;
-  findById: (id: number) => Promise<T | null>;
-  findPaginated: (params: PaginationParams) => Promise<PaginatedResult<T>>;
+  findById: (id: number, query?: string) => Promise<T | null>;
+  findPaginated: (params: PaginationParams, query?: string) => Promise<PaginatedResult<T>>;
   create: (data: Record<string, unknown>) => Promise<T>;
   update: (id: number, data: Record<string, unknown>) => Promise<T | null>;
   delete: (id: number) => Promise<boolean>;
@@ -23,23 +23,24 @@ export interface PaginatedResult<T> {
 }
 
 export function createBaseRepository<T extends QueryResultRow>(
-  tableName: string
+  tableName: string,
+  column: string = "*",
 ): Repository<T> {
   return {
     async findAll() {
-      return query<T>(`SELECT * FROM ${tableName} ORDER BY id`);
+      return query<T>(`SELECT ${column} FROM ${tableName} ORDER BY ${tableName}.id`);
     },
  
-    async findById(id: number) {
-      return queryOne<T>(`SELECT * FROM ${tableName} WHERE id = $1`, [id]);
+    async findById(id: number, customQuery?: string, ) {
+      return queryOne<T>(`${ !customQuery ? `SELECT ${column} FROM ${tableName}` : customQuery } WHERE ${tableName}.id = $1`, [id]);
     },
 
-    async findPaginated(params: PaginationParams = {}) {
+    async findPaginated(params: PaginationParams = {}, customQuery?: string) {
       const limit = params.limit ?? 20;
       const offset = params.offset ?? 0;
  
       const [data, countRows] = await Promise.all([
-        query<T>(`SELECT * FROM ${tableName} ORDER BY id LIMIT $1 OFFSET $2`, [
+        query<T>(`${ !customQuery ? `SELECT ${column} FROM ${tableName}` : customQuery } ORDER BY ${tableName}.id LIMIT $1 OFFSET $2`, [
           limit,
           offset,
         ]),

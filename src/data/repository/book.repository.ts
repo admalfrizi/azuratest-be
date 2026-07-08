@@ -1,6 +1,8 @@
 import { query } from "../../../src/database";
 import { Book } from "../entities/Book";
-import { createBaseRepository } from "./base_repository";
+import { BOOKS_QUERY } from "../entities/SqlQuery";
+import { createBaseRepository, PaginationParams } from "./base_repository";
+
 
 export function createBookRepository() {
     const base = createBaseRepository<Book>("books");
@@ -9,12 +11,12 @@ export function createBookRepository() {
         ...base,
         async findByCategoryId(categoryId: number) {
             return query<Book>(
-                `SELECT * FROM books WHERE category_id = $1`, [categoryId]
+                `${BOOKS_QUERY} WHERE category_id = $1`, [categoryId]
             );
         },
         async findByTitle(title: string) {
             return query<Book>(
-                "SELECT * FROM books WHERE title ILIKE $1 ORDER BY id", [`%${title}%`]
+                `${BOOKS_QUERY} WHERE title ILIKE $1`, [`%${title}%`]
             );
         }
     }
