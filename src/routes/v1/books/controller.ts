@@ -65,12 +65,46 @@ export const updateBook = async (
   req: Request, 
   res: Response
 ) => {
+  const { title, author, category_id, publisher, publication_date, number_of_pages } = validateCreateBook(req.body);
 
+  const category = await categoriesRepository.findById(category_id);
+
+  if (!category) {
+    return sendErrorResponse(res, "category_id does not exist", 400);
+  }
+
+  const book = await bookRepository.update(
+    Number(req.params.id),
+    {
+      title,
+      author,
+      category_id,
+      publisher,
+      publication_date,
+      number_of_pages
+    }
+  );
+
+  sendSuccessResponse(res, book, 201, "Book updated successfully");
 }
 
 export const deleteBook = async (
   req: Request, 
   res: Response
 ) => {
-  
+  const id = Number(req.params.id)
+
+  const deleted = await bookRepository.delete(id);
+
+  if(!deleted)
+  {
+    throw new NotFoundError("Book not found")
+  }
+    
+  sendSuccessResponse(
+    res,
+    "",
+    204,
+    "Book delete successfully"
+  )
 }
