@@ -22,8 +22,8 @@ export const listCategories = async (req: Request, res: Response) => {
         "Successfully retrieved categories",
         {   page, 
             perPage, 
-            total_pages: Math.ceil(result.total / perPage),
-            total_count: result.total, 
+            totalPages: Math.ceil(result.total / perPage),
+            totalCount: result.total, 
         }
     );
 }

@@ -19,8 +19,8 @@ export const listBooks = async (req: Request, res: Response) => {
     "Successfully retrieved books",
     { page, 
       perPage, 
-      total_pages: Math.ceil(result.total / perPage),
-      total_count: result.total, 
+      totalPages: Math.ceil(result.total / perPage),
+      totalCount: result.total, 
     }
   );
 }

@@ -4,7 +4,7 @@ export const BOOK_COLUMNS = `
 `;
 
 export const BOOKS_QUERY = `
-    SELECT ${BOOK_COLUMNS}
-    FROM books
-    JOIN categories ON books.category_id = categories.id
+  SELECT ${BOOK_COLUMNS}
+  FROM books
+  JOIN categories ON books.category_id = categories.id
 `
