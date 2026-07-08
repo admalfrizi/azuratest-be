@@ -12,10 +12,12 @@ export const listBooks = async (req: Request, res: Response) => {
 
   const categoryIdParam = req.query.category_id as string | undefined;
   const publicationDate = req.query.publication_date as string | undefined;
+  const searchParam = req.query.search as string | undefined;
 
   const filters = {
     categoryId: categoryIdParam ? Number(categoryIdParam) : undefined,
     publicationDate: publicationDate,
+    search: searchParam,
   }
   
   const result = await bookRepository.findPaginated({ limit, offset }, filters);

@@ -11,7 +11,7 @@ export function createBookRepository() {
         ...base,
         async findPaginated(
             params: PaginationParams = {}, 
-           filters?: { categoryId?: number; publicationDate?: string }
+           filters?: { categoryId?: number; publicationDate?: string, search?: string }
         ) {
             let baseQuery = BOOKS_QUERY;
             const values: any[] = [];
@@ -25,6 +25,11 @@ export function createBookRepository() {
                 if (filters.publicationDate) {
                     values.push(filters.publicationDate);
                     conditions.push(`publication_date = $${values.length}`);
+                }
+                if (filters.search) {
+                    values.push(`%${filters.search}%`);
+                    const idx = values.length;
+                    conditions.push(`(title ILIKE $${idx} OR author ILIKE $${idx} OR publisher ILIKE $${idx})`);
                 }
             }
 
