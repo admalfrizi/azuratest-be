@@ -28,6 +28,22 @@ export const listCategories = async (req: Request, res: Response) => {
     );
 }
 
+export const listCategoriesForOption = async (req: Request, res: Response) => {
+  const result = await categoriesRepository.findAll();
+
+  const sanitizedData = excludeFieldsFromArray(
+    result, 
+    ["created_at", "updated_at"]
+  );
+
+  sendSuccessResponse(
+    res, 
+    sanitizedData, 
+    200,
+    "Successfully retrieved categories option"
+  );
+}
+
 export const getCategory = async (
   req: Request, 
   res: Response
