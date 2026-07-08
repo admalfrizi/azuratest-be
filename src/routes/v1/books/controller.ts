@@ -9,8 +9,16 @@ import { BOOKS_QUERY } from "../../../data/entities/SqlQuery";
 
 export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
+
+  const categoryIdParam = req.query.category_id as string | undefined;
+  const publicationDate = req.query.publication_date as string | undefined;
+
+  const filters = {
+    categoryId: categoryIdParam ? Number(categoryIdParam) : undefined,
+    publicationDate: publicationDate,
+  }
   
-  const result = await bookRepository.findPaginated({ limit, offset }, BOOKS_QUERY);
+  const result = await bookRepository.findPaginated({ limit, offset }, filters);
   
   sendSuccessResponse(
     res, 
