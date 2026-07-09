@@ -5,11 +5,22 @@ import { bookRepository } from "../../../data/repository/book.repository";
 import { validateCreateBook } from "../../../../src/validators/book.validator";
 import { categoriesRepository } from "../../../../src/data/repository/category.repository";
 import NotFoundError from "../../../errors/NotFoundError";
+import { BOOKS_QUERY } from "../../../data/entities/SqlQuery";
 
 export const listBooks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getParamsData(req);
+
+  const categoryIdParam = req.query.category_id as string | undefined;
+  const publicationDate = req.query.publication_date as string | undefined;
+  const searchParam = req.query.search as string | undefined;
+
+  const filters = {
+    categoryId: categoryIdParam ? Number(categoryIdParam) : undefined,
+    publicationDate: publicationDate,
+    search: searchParam,
+  }
   
-  const result = await bookRepository.findPaginated({ limit, offset });
+  const result = await bookRepository.findPaginated({ limit, offset }, filters);
   
   sendSuccessResponse(
     res, 
@@ -18,8 +29,8 @@ export const listBooks = async (req: Request, res: Response) => {
     "Successfully retrieved books",
     { page, 
       perPage, 
-      total_pages: Math.ceil(result.total / perPage),
-      total_count: result.total, 
+      totalPages: Math.ceil(result.total / perPage),
+      totalCount: result.total, 
     }
   );
 }
@@ -29,7 +40,7 @@ export const getBook = async (
   res: Response
 ) => {
 
-  const bookData = await bookRepository.findById(Number(req.params.id));
+  const bookData = await bookRepository.findById(Number(req.params.id), BOOKS_QUERY);
   if (!bookData) {
     throw new NotFoundError("Book not found");
   }

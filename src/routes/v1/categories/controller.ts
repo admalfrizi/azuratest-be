@@ -3,7 +3,7 @@ import { sendSuccessResponse } from "../../../middleware/response-handler";
 import { categoriesRepository } from "../../../data/repository/category.repository";
 import { Request, Response } from "express";
 import NotFoundError from "../../../errors/NotFoundError";
-import { validateCreateCategory } from "src/validators/category.validator";
+import { validateCreateCategory } from "../../../validators/category.validator";
 
 export const listCategories = async (req: Request, res: Response) => {
     const { page, perPage, limit, offset } = getParamsData(req);
@@ -22,10 +22,26 @@ export const listCategories = async (req: Request, res: Response) => {
         "Successfully retrieved categories",
         {   page, 
             perPage, 
-            total_pages: Math.ceil(result.total / perPage),
-            total_count: result.total, 
+            totalPages: Math.ceil(result.total / perPage),
+            totalCount: result.total, 
         }
     );
+}
+
+export const listCategoriesForOption = async (req: Request, res: Response) => {
+  const result = await categoriesRepository.findAll();
+
+  const sanitizedData = excludeFieldsFromArray(
+    result, 
+    ["created_at", "updated_at"]
+  );
+
+  sendSuccessResponse(
+    res, 
+    sanitizedData, 
+    200,
+    "Successfully retrieved categories option"
+  );
 }
 
 export const getCategory = async (

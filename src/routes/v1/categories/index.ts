@@ -1,8 +1,9 @@
 import express, { Router } from "express";
-import { createCategory, deleteCategory, getCategory, listCategories, updateCategory } from "./controller";
+import { createCategory, deleteCategory, getCategory, listCategories, listCategoriesForOption, updateCategory } from "./controller";
 
 const categories: Router = express.Router();
 
+categories.get("/option", listCategoriesForOption);
 categories.get("/", listCategories);
 categories.get("/:id", getCategory);
 categories.post("/", createCategory);
