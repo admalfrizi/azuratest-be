@@ -3,6 +3,23 @@ import { Book } from "../entities/Book";
 import { BOOKS_QUERY } from "../entities/SqlQuery";
 import { createBaseRepository, PaginationParams } from "./base_repository";
 
+export interface BookEntity extends Omit<Book, 'category_id' | 'category'> {
+  category: {
+    id: number;
+    name: string;
+  };
+}
+
+const mapToBookEntity = (rawBook: any): BookEntity => {
+    const { category_id, category, ...rest } = rawBook;
+    return {
+        ...rest,
+        category: {
+            id: category_id,
+            name: category
+        }
+    };
+};
 
 export function createBookRepository() {
     const base = createBaseRepository<Book>("books");
@@ -39,13 +56,15 @@ export function createBookRepository() {
             const paginatedQuery = `${baseQuery} LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
             const paginatedValues = [...values, params.limit, params.offset];
 
-            const data = await query<Book>(paginatedQuery, paginatedValues);
+            const rawData = await query<any>(paginatedQuery, paginatedValues);
+            
+            const mappedData = rawData.map(mapToBookEntity);
             
             const countQuery = `SELECT COUNT(*) FROM books${whereClause}`;
             const countResult = await query<any>(countQuery, values);
             const total = parseInt(countResult[0].count, 10);
 
-            return { data, total };
+            return { data: mappedData, total };
         },
         async findByCategoryId(categoryId: number) {
             return query<Book>(

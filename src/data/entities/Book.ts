@@ -5,5 +5,6 @@ export interface Book {
   publisher: string;
   publication_date: string;
   number_of_pages: number;
+  category_id: number;
   category: string;
 }
