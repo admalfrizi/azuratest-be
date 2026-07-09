@@ -16,6 +16,10 @@ export const up = (pgm) => {
             onDelete: 'RESTRICT',
         },
     });
+
+    pgm.createIndex('books', 'publication_date', {
+        name: 'idx_books_publication_date',
+    });
 };
 
 /**
@@ -31,5 +35,9 @@ export const down = (pgm) => {
         columns: 'category_id',
         references: 'categories(id)',
         },
+    });
+
+    pgm.dropIndex('books', 'publication_date', {
+        name: 'idx_books_publication_date',
     });
 };
