@@ -66,6 +66,32 @@ export function createBookRepository() {
 
             return { data: mappedData, total };
         },
+        async getAvailablePublicationDates(filters?: { categoryId?: number; search?: string }) {
+            let baseQuery = `SELECT DISTINCT publication_date FROM books`;
+            const values: any[] = [];
+            let conditions: string[] = [];
+
+            if (filters) {
+                if (filters.categoryId) {
+                    values.push(filters.categoryId);
+                    conditions.push(`category_id = $${values.length}`);
+                }
+                if (filters.search) {
+                    values.push(`%${filters.search}%`);
+                    const idx = values.length;
+                    conditions.push(`(title ILIKE $${idx} OR author ILIKE $${idx} OR publisher ILIKE $${idx})`);
+                }
+            }
+
+            if (conditions.length > 0) {
+                baseQuery += ` WHERE ${conditions.join(" AND ")}`;
+            }
+
+            baseQuery += ` ORDER BY publication_date DESC`;
+            const rows = await query<{ publication_date: string }>(baseQuery, values);
+    
+            return rows.map(row => row.publication_date);
+        },
         async findByCategoryId(categoryId: number) {
             return query<Book>(
                 `${BOOKS_QUERY} WHERE category_id = $1`, [categoryId]

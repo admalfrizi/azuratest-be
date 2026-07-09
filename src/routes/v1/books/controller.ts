@@ -48,6 +48,25 @@ export const getBook = async (
   sendSuccessResponse(res, bookData, 200, "Successfully retrieved book");
 }
 
+export const listPublicationDates = async (req: Request, res: Response) => {
+  const categoryIdParam = req.query.category_id as string | undefined;
+  const searchParam = req.query.search as string | undefined;
+
+  const filters = {
+    categoryId: categoryIdParam ? Number(categoryIdParam) : undefined,
+    search: searchParam,
+  };
+
+  const dates = await bookRepository.getAvailablePublicationDates(filters);
+
+  sendSuccessResponse(
+    res,
+    dates,
+    200,
+    "Successfully retrieved available publication dates"
+  );
+}
+
 export const createBook = async (
   req: Request, 
   res: Response
